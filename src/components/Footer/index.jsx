@@ -2,13 +2,12 @@ import React from "react";
 
 import Logo from "@components/UI/Logo";
 import { FooterContainer, FooterWrap } from "./style";
-import whiteLogo from "@assets/whiteLogo.svg";
 
 const Footer = () => {
     return (
         <FooterContainer>
             <FooterWrap>
-                <Logo logo={whiteLogo} />
+                <Logo logo="white" />
                 <span>
                     ©<a href="https://github.com/PolyMarket-Team">ㅍㄹㅁㅋ</a>,
                     Built by
