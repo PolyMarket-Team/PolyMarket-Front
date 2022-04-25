@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-export const Navbar = styled.header`
+export const Navbar = styled.nav`
     position: sticky;
     width: 100%;
     background-colr: #fff;

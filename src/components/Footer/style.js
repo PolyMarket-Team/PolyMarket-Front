@@ -1,9 +1,16 @@
 import styled from "@emotion/styled";
 
 export const FooterContainer = styled.footer`
+    padding: 2rem;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 15rem;
     background-color: #495057;
     color: #fff;
-    padding: 5rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `;
 
 export const FooterWrap = styled.div`
