@@ -1,13 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
-import { Reset } from "styled-reset";
-
 import App from "./App";
+
+import GlobalStyle from "layouts/globalStyle";
 
 ReactDOM.render(
     <BrowserRouter>
-        <Reset />
+        <GlobalStyle />
         <App />
     </BrowserRouter>,
     document.getElementById("root")
