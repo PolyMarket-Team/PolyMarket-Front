@@ -8,11 +8,11 @@ import {
     Label,
     Input,
     Error,
-    // Success,
     LinkContainer,
     AuthContainer,
-    Main,
+    Section,
 } from "./style";
+import Layout from "layouts";
 
 const Signup = () => {
     const [emailIsVerified, setEmailIsVerified] = useState(false);
@@ -20,6 +20,7 @@ const Signup = () => {
     const [codeIsExpire, setCodeIsExpire] = useState(false);
 
     const emailRegex = /\S+@\S+\.\S+/;
+    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,20}$/;
 
     const {
         value: nickname,
@@ -41,7 +42,7 @@ const Signup = () => {
         hasError: passwordHasError,
         valueChangeHandler: onChangePassword,
         inputBlurHandler: onBlurPassword,
-    } = useInput((value) => value.includes("!"));
+    } = useInput((value) => passwordRegex.test(value));
     const {
         value: passwordCheck,
         isValid: passwordCheckIsValid,
@@ -105,108 +106,121 @@ const Signup = () => {
     };
 
     return (
-        <Main>
-            <Header>회원가입</Header>
-            <Form onSubmit={formSubmitHandler}>
-                <Label id="email-label">
-                    <span>이메일 주소</span>
-                    <div>
-                        <Input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={email}
-                            onChange={onChangeEmail}
-                            onBlur={onBlurEmail}
-                        />
-                    </div>
-                    {emailHasError && (
-                        <Error>Email 형식으로 입력해주세요.</Error>
-                    )}
-                    <Button
-                        type="button"
-                        disabled={!emailSendBtnActive}
-                        onClick={emailSendHandler}
-                    >
-                        이메일 인증하기
-                    </Button>
-                    {emailIsSent && (
-                        <AuthContainer isExpire={!codeIsExpire}>
-                            <span className="auth-message">
-                                이메일로 전송된 인증코드를 입력해주세요.
-                            </span>
-                            <div className="auth-container">
-                                <div>
-                                    <input placeholder="인증코드 6자리" />
-                                    <span className="timer">03:00</span>
-                                    <button
-                                        className="auth-button"
-                                        type="button"
-                                        onClick={emailVerifyHandler}
-                                    >
-                                        확인
-                                    </button>
+        <Layout auth>
+            <Section>
+                <Header>회원가입</Header>
+                <Form onSubmit={formSubmitHandler}>
+                    <Label id="email-label" error={emailHasError}>
+                        <span>이메일 주소</span>
+                        <div>
+                            <Input
+                                type="email"
+                                id="email"
+                                name="email"
+                                value={email}
+                                onChange={onChangeEmail}
+                                onBlur={onBlurEmail}
+                                placeholder="이메일"
+                                error={emailHasError}
+                                readOnly={emailIsSent}
+                            />
+                        </div>
+                        {emailHasError && (
+                            <Error>Email 형식으로 입력해주세요.</Error>
+                        )}
+                        <Button
+                            type="button"
+                            disabled={!emailSendBtnActive}
+                            onClick={emailSendHandler}
+                        >
+                            이메일 인증하기
+                        </Button>
+                        {emailIsSent && (
+                            <AuthContainer isExpire={!codeIsExpire}>
+                                <span className="auth-message">
+                                    이메일로 전송된 인증코드를 입력해주세요.
+                                </span>
+                                <div className="auth-container">
+                                    <div>
+                                        <input placeholder="인증코드 6자리" />
+                                        <span className="timer">03:00</span>
+                                        <button
+                                            className="auth-button"
+                                            type="button"
+                                            onClick={emailVerifyHandler}
+                                        >
+                                            확인
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        </AuthContainer>
-                    )}
-                </Label>
+                            </AuthContainer>
+                        )}
+                    </Label>
 
-                <Label id="nickname-label">
-                    <span>닉네임</span>
-                    <div>
-                        <Input
-                            type="text"
-                            id="nickname"
-                            name="nickname"
-                            value={nickname}
-                            onChange={onChangeNickname}
-                            onBlur={onBlurNickname}
-                        />
-                    </div>
-                    {nicknameHasError && <Error>닉네임을 입력해주세요.</Error>}
-                </Label>
-                <Label id="password-label">
-                    <span>비밀번호</span>
-                    <div>
-                        <Input
-                            type="password"
-                            id="password"
-                            name="password"
-                            value={password}
-                            onChange={onChangePassword}
-                            onBlur={onBlurPassword}
-                        />
-                    </div>
-                    {passwordHasError && (
-                        <Error>비밀번호 양식에 맞게 입력해주세요.</Error>
-                    )}
-                </Label>
-                <Label id="password-check-label">
-                    <span>비밀번호 확인</span>
-                    <div>
-                        <Input
-                            type="password"
-                            id="password-check"
-                            name="password-check"
-                            value={passwordCheck}
-                            onChange={onChangePasswordCheck}
-                            onBlur={onBlurPasswordCheck}
-                        />
-                    </div>
-                    {passwordCheckHasError && (
-                        <Error>비밀번호가 일치하지 않습니다.</Error>
-                    )}
-                </Label>
-                <Button disabled={!formIsValid} type="submit">
-                    회원가입
-                </Button>
-            </Form>
-            <LinkContainer>
-                이미 회원이신가요?&nbsp;
-                <a href="/login">로그인 하러가기</a>
-            </LinkContainer>
-        </Main>
+                    <Label id="nickname-label" error={nicknameHasError}>
+                        <span>닉네임</span>
+                        <div>
+                            <Input
+                                type="text"
+                                id="nickname"
+                                name="nickname"
+                                value={nickname}
+                                onChange={onChangeNickname}
+                                onBlur={onBlurNickname}
+                                error={nicknameHasError}
+                            />
+                        </div>
+                        {nicknameHasError && (
+                            <Error>닉네임을 입력해주세요.</Error>
+                        )}
+                    </Label>
+                    <Label id="password-label" error={passwordHasError}>
+                        <span>비밀번호</span>
+                        <div>
+                            <Input
+                                type="password"
+                                id="password"
+                                name="password"
+                                value={password}
+                                onChange={onChangePassword}
+                                onBlur={onBlurPassword}
+                                error={passwordHasError}
+                            />
+                        </div>
+                        {passwordHasError && (
+                            <Error>비밀번호 양식에 맞게 입력해주세요.</Error>
+                        )}
+                    </Label>
+                    <Label
+                        id="password-check-label"
+                        error={passwordCheckHasError}
+                    >
+                        <span>비밀번호 확인</span>
+                        <div>
+                            <Input
+                                type="password"
+                                id="password-check"
+                                name="password-check"
+                                value={passwordCheck}
+                                onChange={onChangePasswordCheck}
+                                onBlur={onBlurPasswordCheck}
+                                error={passwordCheckHasError}
+                            />
+                        </div>
+                        {passwordCheckHasError && (
+                            <Error>비밀번호가 일치하지 않습니다.</Error>
+                        )}
+                    </Label>
+                    <Button disabled={!formIsValid} type="submit">
+                        회원가입
+                    </Button>
+                </Form>
+                <LinkContainer>
+                    이미 회원이신가요?&nbsp;
+                    <a href="/login">로그인 하러가기</a>
+                </LinkContainer>
+            </Section>
+        </Layout>
     );
 };
 
