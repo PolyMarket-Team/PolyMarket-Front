@@ -3,6 +3,7 @@ import loadable from "@loadable/component";
 
 const Home = loadable(() => import("@pages/Home"));
 const Product = loadable(() => import("@pages/Product"));
+const ProductDetail = loadable(() => import("@pages/ProductDetail"));
 const Chat = loadable(() => import("@pages/Chat"));
 const Login = loadable(() => import("@pages/Login"));
 const Signup = loadable(() => import("@pages/Signup"));
@@ -12,6 +13,7 @@ function App() {
         <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/product" element={<Product />} />
+            <Route path="/product/:productId" element={<ProductDetail />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
