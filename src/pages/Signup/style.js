@@ -1,13 +1,23 @@
 import styled from "@emotion/styled";
+export const Main = styled.main`
+    height: 100%;
+`;
 
 export const Section = styled.section`
+    padding-top: 40px;
+    width: calc(100% - 30px);
+    height: 100%;
     width: 36rem;
-    margin: 5rem auto;
+    margin: 0 auto;
+    > div {
+        padding: 10rem 0;
+    }
 `;
 
 export const Header = styled.header`
     text-align: left;
-    font-size: 2.4rem;
+    font-size: 2rem;
+    font-weight: 600;
     line-height: 5rem;
     border-bottom: 1px solid #dadce0;
     margin-bottom: 3rem;
@@ -109,8 +119,12 @@ export const AuthContainer = styled.div`
                 font-size: 1.5rem;
             }
             .timer {
+                width: 6rem;
+                text-align: center;
+                font-size: 14px;
                 margin: 0 1rem;
                 color: #e01e5a;
+                padding: 3px;
             }
             .auth-button {
                 height: 3rem;
