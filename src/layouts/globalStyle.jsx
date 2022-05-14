@@ -95,12 +95,15 @@ const GlobalStyle = () => (
                 box-sizing: border-box;
             }
             html {
+                height: 100%;
                 font-size: 62.5%;
                 font-family: "Noto Sans KR", "sans-serif";
-                body {
-                    position: relative;
-                    padding-bottom: 15rem;
-                    min-height: 100vh;
+            }
+            body {
+                height: 100%;
+
+                #root {
+                    height: 100%;
                 }
             }
             ol,

@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 export const FooterContainer = styled.footer`
     padding: 2rem;
     position: absolute;
+    left: 0;
     bottom: 0;
     width: 100%;
     height: 15rem;

@@ -6,7 +6,6 @@ const Layout = (props) => {
     return props.auth ? (
         <>
             <>{props.children}</>
-            <Footer />
         </>
     ) : (
         <>
