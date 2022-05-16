@@ -1,14 +1,9 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import AuthContext from "store/context/auth-context";
 
 const AuthTimer = () => {
-    const {
-        expirationTime,
-        emailTime,
-        setEmailTime,
-        codeIsExpire,
-        setCodeIsExpire,
-    } = useContext(AuthContext);
+    const { expirationTime, emailTime, setEmailTime, setIsCodeExpire } =
+        useContext(AuthContext);
 
     useEffect(() => {
         if (emailTime > 0) {
@@ -24,7 +19,7 @@ const AuthTimer = () => {
                 clearInterval(Counter);
             };
         }
-        setCodeIsExpire(true);
+        setIsCodeExpire(true);
     }, [emailTime, expirationTime]);
 
     const timeFormat = (emailTime) => {

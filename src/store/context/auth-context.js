@@ -4,6 +4,8 @@ const AuthContext = React.createContext({
     emailTime: "",
     setEmailTime: "",
     expirationTime: "",
+    isCodeExpire: "",
+    setIsCodeExpire: "",
     login: () => {},
     logout: () => {},
 });
@@ -11,7 +13,7 @@ const AuthContext = React.createContext({
 export const AuthContextProvider = (props) => {
     const [emailTime, setEmailTime] = useState(300);
     const [expirationTime, setExpirationTime] = useState("");
-    const [codeIsExpire, setCodeIsExpire] = useState(false);
+    const [isCodeExpire, setIsCodeExpire] = useState(false);
 
     const loginHandler = () => {};
 
@@ -28,8 +30,8 @@ export const AuthContextProvider = (props) => {
         specifyExpirationTime: expirationTimeHandler,
         emailTime,
         setEmailTime,
-        codeIsExpire,
-        setCodeIsExpire,
+        isCodeExpire,
+        setIsCodeExpire,
     };
 
     return (
