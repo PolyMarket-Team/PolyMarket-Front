@@ -103,7 +103,7 @@ export const AuthContainer = styled.div`
 
     .auth-container {
         width: 100%;
-        & > div {
+        .auth-number-container {
             padding: 0 1.6rem;
             height: 4.5rem;
             display: flex;
@@ -111,7 +111,7 @@ export const AuthContainer = styled.div`
             align-items: center;
             background: #fff;
             border: 1px solid
-                ${(props) => (props.isExpire ? "#dbdbdb" : "#e01e5a")};
+                ${(props) => (props.isExpire ? "#f77" : "#dbdbdb")};
             & > input {
                 margin: 0;
                 outline: none;
@@ -123,7 +123,7 @@ export const AuthContainer = styled.div`
                 text-align: center;
                 font-size: 14px;
                 margin: 0 1rem;
-                color: #e01e5a;
+                color: #f77;
                 padding: 3px;
             }
             .auth-button {
@@ -139,6 +139,24 @@ export const AuthContainer = styled.div`
                 transition: all 80ms linear;
                 &:hover {
                     background: #406481;
+                }
+            }
+        }
+        .expiration-container {
+            margin-top: 1.7rem;
+
+            font-size: 1.4rem;
+            .expiration-message {
+                color: #f77;
+                margin-right: 4rem;
+            }
+            & > div {
+                margin: 1rem 0;
+                color: #c3c3c3;
+                & > span:nth-of-type(2) {
+                    margin-left: 1rem;
+                    border-bottom: 1px solid #ccc;
+                    cursor: pointer;
                 }
             }
         }
