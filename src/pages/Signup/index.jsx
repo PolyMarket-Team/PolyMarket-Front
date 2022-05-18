@@ -1,9 +1,11 @@
 import React, { useContext, useState } from "react";
 import useInput from "@hooks/useInput";
-import CircularProgress from "@mui/material/CircularProgress";
-import { useNavigate } from "react-router-dom";
+import AuthTimer from "utils/AuthTimer";
 import AuthContext from "store/context/auth-context";
+import { useNavigate } from "react-router-dom";
 
+import Layout from "layouts";
+import CircularProgress from "@mui/material/CircularProgress";
 import { Button } from "@components/UI/Button";
 import {
     Main,
@@ -16,13 +18,10 @@ import {
     AuthContainer,
     Section,
 } from "./style";
-import Layout from "layouts";
-import axios from "axios";
-import AuthTimer from "utils/AuthTimer";
 
 const Signup = () => {
     const authCtx = useContext(AuthContext);
-
+    const navigate = useNavigate();
     const [isEmailVerified, setIsEmailVerified] = useState(false);
     const [isEmailSending, setIsEmailSending] = useState(null);
     const [emailIsSent, setEmailIsSent] = useState(false);
@@ -73,56 +72,32 @@ const Signup = () => {
         }
     }
 
-    /* 인증 코드 전송
-     *
-     * TODO: email 전송 API 호출
-     * - Loading Spinner 추가. 🆗
-     * - timer 기능 추가. 🆗
-     * - setCodeIsExpire 상태 변경.
-     *
-     */
-
+    // 인증 코드 전송
     const emailSendHandler = (e) => {
         e.preventDefault();
         setIsEmailSending(true);
-
-        axios
-            .post("/users/send-email", { email: email })
-            .then((response) => {
-                setIsEmailSending(false);
-                setEmailIsSent(true);
-
-                authCtx.specifyExpirationTime(
-                    response.data.data.expireDateTime
-                );
-            })
-            .catch((error) => {
-                setIsEmailSending(false);
-                console.log(error);
-            });
+        try {
+            authCtx.sendemail({ email: email });
+            setIsEmailSending(false);
+            setEmailIsSent(true);
+        } catch (error) {
+            setIsEmailSending(false);
+            console.log(error);
+        }
     };
 
     const isExpired = authCtx.isCodeExpire;
 
-    /* 이메일 인증 코드 체크
-     *
-     * TODO: email 인증 API 호출
-     *
-     */
+    // 이메일 인증 코드 체크
     const emailVerifyHandler = (e) => {
         e.preventDefault();
-        axios
-            .post("/users/confirm-email", {
-                authCode: authCode,
-                email: email,
-            })
-            .then((response) => {
-                console.log(response);
-                setIsEmailVerified(true);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        const data = { authCode: authCode, email: email };
+        try {
+            authCtx.codeconfirm(data);
+            setIsEmailVerified(true);
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     // Form 유효성 체크
@@ -136,14 +111,7 @@ const Signup = () => {
         formIsValid = true;
     }
 
-    /* Form 제출
-     *
-     * TODO: signup API 호출
-     * - redux(store)로 옮기기.
-     * - Loading Spinner 추가.
-     */
-    const navigate = useNavigate();
-
+    // Form 제출
     const formSubmitHandler = (e) => {
         e.preventDefault();
 
@@ -151,23 +119,14 @@ const Signup = () => {
             return;
         }
 
-        console.log("전송 완료");
-
         const credentials = {
             email: email,
             nickname: nickname,
             password: password,
         };
 
-        axios
-            .post("users/signup", credentials)
-            .then((response) => {
-                navigate("/login", { replace: true });
-                console.log(response);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        // 회원가입 axios 요청
+        authCtx.signup(credentials, navigate);
     };
 
     return (
