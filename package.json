@@ -46,5 +46,6 @@
     },
     "devDependencies": {
         "craco-alias": "^3.0.1"
-    }
+    },
+    "proxy": "https://api-dev.polymarket.kr/"
 }
