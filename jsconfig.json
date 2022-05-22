@@ -6,8 +6,14 @@
             "@actions/*": ["./actions/*"],
             "@api/*": ["./api/*"],
             "@components/*": ["./components/*"],
+            "@constants/*": ["./coconstants/*"],
             "@hooks/*": ["./hooks/*"],
-            "@pages/*": ["./pages/*"]
+            "@layouts/*": ["./layouts/*"],
+            "@pages/*": ["./pages/*"],
+            "@reducers/*": ["./reducers/*"],
+            "@store/*": ["./store/*"],
+            "@services/*": ["./services/*"],
+            "@utils/*": ["./utils/*"]
         }
     }
 }
