@@ -1,9 +1,11 @@
-import { useContext, useEffect } from "react";
-import AuthContext from "store/context/auth-context";
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 const AuthTimer = () => {
-    const { expirationTime, emailTime, setEmailTime, setIsCodeExpire } =
-        useContext(AuthContext);
+    const { expirationTime } = useSelector((state) => state.email);
+    const [emailTime, setEmailTime] = useState(300);
+    const dispatch = useDispatch();
+    const { isEmailVerified } = useSelector((state) => state.email);
 
     useEffect(() => {
         if (emailTime > 0) {
@@ -19,8 +21,9 @@ const AuthTimer = () => {
                 clearInterval(Counter);
             };
         }
-        setIsCodeExpire(true);
-    }, [emailTime, expirationTime]);
+
+        dispatch({ type: "SET_CODE_IS_EXPIRE" });
+    }, [emailTime, expirationTime, dispatch, isEmailVerified]);
 
     const timeFormat = (emailTime) => {
         const m = Math.floor(emailTime / 60).toString();

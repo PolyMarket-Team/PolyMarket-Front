@@ -1,8 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { confirmemail, sendemail } from "@actions/email";
+import { signup } from "@actions/auth";
+
+import { useNavigate } from "react-router-dom";
 import useInput from "@hooks/useInput";
 import AuthTimer from "utils/AuthTimer";
-import AuthContext from "store/context/auth-context";
-import { useNavigate } from "react-router-dom";
 
 import Layout from "layouts";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -20,11 +23,14 @@ import {
 } from "./style";
 
 const Signup = () => {
-    const authCtx = useContext(AuthContext);
     const navigate = useNavigate();
-    const [isEmailVerified, setIsEmailVerified] = useState(false);
-    const [isEmailSending, setIsEmailSending] = useState(null);
-    const [emailIsSent, setEmailIsSent] = useState(false);
+    const dispatch = useDispatch();
+    const { isEmailSent, isCodeExpire, isEmailVerified } = useSelector(
+        (state) => state.email
+    );
+    const { message } = useSelector((state) => state.message);
+
+    const [isLoading, setIsLoading] = useState(false);
 
     const emailRegex = /\S+@\S+\.\S+/;
     const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,20}$/;
@@ -67,7 +73,7 @@ const Signup = () => {
     let emailSendBtnActive = false;
     if (emailIsValid) {
         emailSendBtnActive = true;
-        if (emailIsSent) {
+        if (isEmailSent) {
             emailSendBtnActive = false;
         }
     }
@@ -75,29 +81,15 @@ const Signup = () => {
     // 인증 코드 전송
     const emailSendHandler = (e) => {
         e.preventDefault();
-        setIsEmailSending(true);
-        try {
-            authCtx.sendemail({ email: email });
-            setIsEmailSending(false);
-            setEmailIsSent(true);
-        } catch (error) {
-            setIsEmailSending(false);
-            console.log(error);
-        }
-    };
 
-    const isExpired = authCtx.isCodeExpire;
+        dispatch(sendemail({ email }));
+    };
 
     // 이메일 인증 코드 체크
     const emailVerifyHandler = (e) => {
         e.preventDefault();
-        const data = { authCode: authCode, email: email };
-        try {
-            authCtx.codeconfirm(data);
-            setIsEmailVerified(true);
-        } catch (error) {
-            console.log(error);
-        }
+
+        dispatch(confirmemail({ authCode, email }));
     };
 
     // Form 유효성 체크
@@ -119,14 +111,10 @@ const Signup = () => {
             return;
         }
 
-        const credentials = {
-            email: email,
-            nickname: nickname,
-            password: password,
-        };
-
-        // 회원가입 axios 요청
-        authCtx.signup(credentials, navigate);
+        // 회원가입 action 요청
+        dispatch(signup({ email, nickname, password })).then(() => {
+            navigate("/login", { replace: true });
+        });
     };
 
     return (
@@ -149,7 +137,7 @@ const Signup = () => {
                                         onChange={onChangeEmail}
                                         onBlur={onBlurEmail}
                                         error={emailHasError}
-                                        readOnly={emailIsSent}
+                                        readOnly={isEmailSent}
                                         required
                                     />
                                 </div>
@@ -161,14 +149,14 @@ const Signup = () => {
                                     disabled={!emailSendBtnActive}
                                     onClick={emailSendHandler}
                                 >
-                                    {isEmailSending ? (
+                                    {isLoading ? (
                                         <CircularProgress size={20} />
                                     ) : (
                                         <p>이메일 인증하기</p>
                                     )}
                                 </Button>
-                                {emailIsSent && (
-                                    <AuthContainer isExpire={isExpired}>
+                                {isEmailSent && (
+                                    <AuthContainer>
                                         <span className="auth-message">
                                             이메일로 전송된 인증코드를
                                             입력해주세요.
@@ -188,7 +176,7 @@ const Signup = () => {
                                                     type="button"
                                                     onClick={emailVerifyHandler}
                                                 >
-                                                    {isEmailSending ? (
+                                                    {isLoading ? (
                                                         <CircularProgress
                                                             size={20}
                                                         />
@@ -197,7 +185,7 @@ const Signup = () => {
                                                     )}
                                                 </button>
                                             </div>
-                                            {isExpired && (
+                                            {isCodeExpire && (
                                                 <div className="expiration-container">
                                                     <span className="expiration-message">
                                                         인증코드가

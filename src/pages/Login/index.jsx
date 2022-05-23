@@ -1,7 +1,6 @@
-import React, { useContext, useState } from "react";
+import React from "react";
+import { login } from "@actions/auth";
 import useInput from "@hooks/useInput";
-import AuthContext from "store/context/auth-context";
-import * as actions from "@actions/auth";
 import { Link, useNavigate } from "react-router-dom";
 
 import Logo from "@components/UI/Logo";
@@ -9,11 +8,10 @@ import { Button } from "@components/UI/Button";
 import Layout from "layouts";
 import { Form, Label, Input, Error, LinkContainer } from "@pages/Signup/style";
 import { Section, Header } from "./style";
+import { useSelector, useDispatch } from "react-redux";
 
 const Login = () => {
-    const authCtx = useContext(AuthContext);
     const navigate = useNavigate();
-    const [loginError, setLoginError] = useState(false);
 
     const emailRegex = /\S+@\S+\.\S+/;
     const passwordRegex = /(?=.*\d)(?=.*[a-z]).{8,}/;
@@ -31,25 +29,18 @@ const Login = () => {
         inputBlurHandler: onBlurPassword,
     } = useInput((value) => passwordRegex.test(value));
 
+    // const { message } = useSelector((state) => state.message);
+
+    const dispatch = useDispatch();
+
     const formSubmitHandler = (e) => {
         e.preventDefault();
 
-        const credentials = {
-            email: email,
-            password: password,
-        };
-
-        try {
-            const response = actions.signin(credentials, navigate);
-            response.then((res) => {
-                authCtx.login(res.data.data.accessToken);
-                navigate("/", { replace: true });
-            });
-        } catch (error) {
-            console.log(error);
-            setLoginError(true);
-        }
+        dispatch(login({ email, password })).then(() => {
+            navigate("/", { replace: true });
+        });
     };
+
     return (
         <Layout auth>
             <Section>
@@ -90,12 +81,12 @@ const Login = () => {
                         )}
                     </Label>
                     <Button type="submit">로그인</Button>
-                    {loginError && (
+                    {/* {loginError && (
                         <Error>
                             등록된 계정이 없습니다. 이메일과 비밀번호를
                             확인해주세요
                         </Error>
-                    )}
+                    )} */}
                 </Form>
                 <LinkContainer>
                     아직 회원이 아니신가요?&nbsp;
