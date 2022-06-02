@@ -1,5 +1,6 @@
 import React from "react";
-import { login } from "@actions/auth";
+import { login } from "redux/modules/authSlice";
+
 import useInput from "@hooks/useInput";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -8,10 +9,11 @@ import { Button } from "@components/UI/Button";
 import Layout from "layouts";
 import { Form, Label, Input, Error, LinkContainer } from "@pages/Signup/style";
 import { Section, Header } from "./style";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const emailRegex = /\S+@\S+\.\S+/;
     const passwordRegex = /(?=.*\d)(?=.*[a-z]).{8,}/;
@@ -28,10 +30,6 @@ const Login = () => {
         valueChangeHandler: onChangePassword,
         inputBlurHandler: onBlurPassword,
     } = useInput((value) => passwordRegex.test(value));
-
-    // const { message } = useSelector((state) => state.message);
-
-    const dispatch = useDispatch();
 
     const formSubmitHandler = (e) => {
         e.preventDefault();
@@ -81,12 +79,6 @@ const Login = () => {
                         )}
                     </Label>
                     <Button type="submit">로그인</Button>
-                    {/* {loginError && (
-                        <Error>
-                            등록된 계정이 없습니다. 이메일과 비밀번호를
-                            확인해주세요
-                        </Error>
-                    )} */}
                 </Form>
                 <LinkContainer>
                     아직 회원이 아니신가요?&nbsp;
