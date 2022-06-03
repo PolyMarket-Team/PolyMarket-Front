@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 const AuthTimer = () => {
-    const { expirationTime } = useSelector((state) => state.email);
+    const { expirationTime, timerState } = useSelector((state) => state.email);
     const [emailTime, setEmailTime] = useState(300);
-    const dispatch = useDispatch();
-    const { isEmailVerified } = useSelector((state) => state.email);
 
     useEffect(() => {
-        if (emailTime > 0) {
-            const Counter = setInterval(() => {
+        let Counter;
+        if (timerState && emailTime > 0) {
+            Counter = setInterval(() => {
                 const duration = Math.floor(
                     (new Date(expirationTime).getTime() -
                         new Date().getTime()) /
@@ -17,13 +16,13 @@ const AuthTimer = () => {
                 );
                 setEmailTime(duration);
             }, 1000);
-            return () => {
-                clearInterval(Counter);
-            };
+        } else if (!timerState) {
+            clearInterval(Counter);
         }
-
-        dispatch({ type: "SET_CODE_IS_EXPIRE" });
-    }, [emailTime, expirationTime, dispatch, isEmailVerified]);
+        return () => {
+            clearInterval(Counter);
+        };
+    }, [expirationTime, timerState, emailTime]);
 
     const timeFormat = (emailTime) => {
         const m = Math.floor(emailTime / 60).toString();
