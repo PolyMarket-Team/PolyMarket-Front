@@ -1,13 +1,13 @@
 import { combineReducers } from "@reduxjs/toolkit";
 import authSlice from "./authSlice";
 import emailSlice from "./emailSlice";
-import msgSlice from "./msgSlice";
+import notiSlice from "./notiSlice";
 
 const reducer = (state, action) => {
     return combineReducers({
         auth: authSlice,
         email: emailSlice,
-        msg: msgSlice,
+        noti: notiSlice,
     })(state, action);
 };
 
