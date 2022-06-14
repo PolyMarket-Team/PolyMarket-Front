@@ -28,9 +28,10 @@ export const login = createAsyncThunk(
     async (formData, { rejectWithValue }) => {
         try {
             const response = await authApi.signin(formData);
-            const userId = response.data.data.userId;
-            const userInfo = await authApi.getUserData(userId);
-            return { response: response.data, userInfo: userInfo.data.data };
+            TokenService.setUserToken(response.data.data);
+            TokenService.setUserInfo(response.data.data);
+            console.log(response.data);
+            return response.data;
         } catch (error) {
             console.log(error);
             return rejectWithValue(error.response.data);
@@ -42,7 +43,14 @@ const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
-        logOut(state, action) {
+        loginCheck(state, action) {
+            const userInfo = TokenService.getUserInfo();
+            if (userInfo) {
+                state.isLogin = true;
+                state.userInfo = userInfo;
+            }
+        },
+        logOut(state) {
             TokenService.removeUserData();
             state.isLogin = false;
             state.userInfo = null;
@@ -75,8 +83,8 @@ const authSlice = createSlice({
         builder.addCase(login.fulfilled, (state, action) => {
             state.isLogin = true;
             state.fetchLoginState = "SUCCESS";
-            state.authMessage = action.payload.response.message;
-            state.userInfo = action.payload.userInfo;
+            state.authMessage = action.payload.message;
+            state.userInfo = action.payload.data.userProfile;
         });
         builder.addCase(login.rejected, (state, action) => {
             state.fetchLoginState = "ERROR";
@@ -85,6 +93,6 @@ const authSlice = createSlice({
     },
 });
 
-export const { logOut, setUserNickname, setUserProfileImage } =
+export const { loginCheck, logOut, setUserNickname, setUserProfileImage } =
     authSlice.actions;
 export default authSlice.reducer;

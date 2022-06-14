@@ -34,9 +34,8 @@ const SignupForm = () => {
         codeExpirationState,
         emailMessage,
     } = useSelector((state) => state.email);
-    const { fetchRegisterState, authMessage, isRegistCompleted } = useSelector(
-        (state) => state.auth
-    );
+    const { isLogin, fetchRegisterState, authMessage, isRegistCompleted } =
+        useSelector((state) => state.auth);
 
     // useInput 사용해서 input 관리
     const emailRegex = /\S+@\S+\.\S+/;
@@ -156,6 +155,11 @@ const SignupForm = () => {
         }
     }, [isRegistCompleted, navigate]);
 
+    useEffect(() => {
+        if (isLogin) {
+            navigate("/", { replace: true });
+        }
+    }, [isLogin, navigate]);
     return (
         <Main>
             <Section>
